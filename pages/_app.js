@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { NextSeo } from 'next-seo';
 import SSRProvider from 'react-bootstrap/SSRProvider';
 import { Analytics } from '@vercel/analytics/react';
+import { AuthContextProvider } from '../context/AuthContext';
 
 // import theme style scss file
 import 'styles/theme.scss';
@@ -14,21 +15,18 @@ import DefaultDashboardLayout from 'layouts/DefaultDashboardLayout';
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const pageURL = process.env.baseURL + router.pathname;
-  const title = "Dash UI - Next.Js Admin Dashboard Template";
-  const description = "Dash is a fully responsive and yet modern premium Nextjs template & snippets. Geek is feature-rich Nextjs components and beautifully designed pages that help you create the best possible website and web application projects. Nextjs Snippet "
-  const keywords = "Dash UI, Nextjs, Next.js, Course, Sass, landing, Marketing, admin themes, Nextjs admin, Nextjs dashboard, ui kit, web app, multipurpose"
+  const title = 'Tripnary';
+  const description =
+    'Tripnary es una aplicación que te ayuda a planificar tus viajes de manera fácil y rápida.';
+  const keywords =
+    'web app, multipurpose, trip, travel, trip planner, travel app, travel organizer, journey scheduler, itinerary builder, destination explorer, restaurant finder, global travel guide, travel recommendations, restaurant recommendations, travel tips, sightseeing suggestions, adventure planning, cultural etiquette, local events, food experiences, transportation options, travel safety, travel reviews';
 
-  // Identify the layout, which will be applied conditionally
-  const Layout = Component.Layout || (router.pathname.includes('dashboard') ? 
-  (router.pathname.includes('instructor') || router.pathname.includes('student') ? 
-  DefaultDashboardLayout : DefaultDashboardLayout) : DefaultDashboardLayout)
-  
   return (
     <SSRProvider>
       <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="keywords" content={keywords} />
-        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <meta name='keywords' content={keywords} />
+        <link rel='shortcut icon' href='/favicon.ico' type='image/x-icon' />
       </Head>
       <NextSeo
         title={title}
@@ -38,15 +36,15 @@ function MyApp({ Component, pageProps }) {
           url: pageURL,
           title: title,
           description: description,
-          site_name: process.env.siteName
+          site_name: process.env.siteName,
         }}
       />
-        <Layout>
-          <Component {...pageProps} />
-          <Analytics />
-        </Layout>
+
+      <AuthContextProvider>
+        <Component {...pageProps} />{' '}
+      </AuthContextProvider>
     </SSRProvider>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;
