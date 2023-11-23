@@ -9,14 +9,14 @@ export default async function handler(req, res) {
 
 const getPrestamosHandler = async (res) => {
     try {
-        const equipajeSnap = await db
+        const prestamosSnap = await db
             .collection("prestamos")
             .get();
-        const equipaje = equipajeSnap.docs.map((doc) => ({
+        const prestamos = prestamosSnap.docs.map((doc) => ({
             reference: doc.id,
             ...doc.data(),
         }));
-        res.status(200).json(equipaje);
+        res.status(200).json(prestamos);
     } catch (error) {
         res.status(500).json({ error: "Something went wrong" });
     }
