@@ -9,6 +9,7 @@ export default async function handler(req, res) {
 
 const getPrestamosHandler = async (res) => {
     try {
+        
         const prestamosSnap = await db
             .collection("prestamos")
             .get();
