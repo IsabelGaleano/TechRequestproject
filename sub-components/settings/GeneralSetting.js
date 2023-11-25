@@ -4,21 +4,18 @@ import { Col, Row, Form, Card, Button, Image } from "react-bootstrap";
 // import widget as custom components
 import { FormSelect, DropFiles } from "widgets";
 
-const GeneralSetting = () => {
-  const countryOptions = [
-    { value: "India", label: "India" },
-    { value: "US", label: "US" },
-    { value: "UK", label: "UK" },
-    { value: "UAE", label: "UAE" },
-  ];
+const GeneralSetting = props => {
+  const usuario = props.usuario;
+
+  console.log(props);
 
   return (
     <Row className="mb-8">
       <Col xl={3} lg={4} md={12} xs={12}>
         <div className="mb-4 mb-lg-0">
-          <h4 className="mb-1">General Setting</h4>
+          <h4 className="mb-1">Ajustes Generales</h4>
           <p className="mb-0 fs-5 text-muted">
-            Profile configuration settings{" "}
+            Ajustes del Perfil{" "}
           </p>
         </div>
       </Col>
@@ -27,11 +24,11 @@ const GeneralSetting = () => {
           {/* card body */}
           <Card.Body>
             <div className=" mb-6">
-              <h4 className="mb-1">General Settings</h4>
+              <h4 className="mb-1">Ajustes Generales</h4>
             </div>
             <Row className="align-items-center mb-8">
               <Col md={3} className="mb-3 mb-md-0">
-                <h5 className="mb-0">Avatar</h5>
+                <h5 className="mb-0">Foto de Perfil</h5>
               </Col>
               <Col md={9}>
                 <div className="d-flex align-items-center">
@@ -48,10 +45,10 @@ const GeneralSetting = () => {
                       className="me-2"
                       type="submit"
                     >
-                      Change{" "}
+                      Cambiar{" "}
                     </Button>
                     <Button variant="outline-white" type="submit">
-                      Remove{" "}
+                      Eliminar{" "}
                     </Button>
                   </div>
                 </div>
@@ -61,7 +58,7 @@ const GeneralSetting = () => {
             <Row className="mb-8">
               <Col md={3} className="mb-3 mb-md-0">
                 {/* heading */}
-                <h5 className="mb-0">Cover photo</h5>
+                <h5 className="mb-0">Foto de Portada</h5>
               </Col>
               <Col md={9}>
                 {/* dropzone input */}
@@ -81,7 +78,7 @@ const GeneralSetting = () => {
             <div>
               {/* border */}
               <div className="mb-6">
-                <h4 className="mb-1">Basic information</h4>
+                <h4 className="mb-1">Información Básica</h4>
               </div>
               <Form>
                 {/* row */}
@@ -91,13 +88,13 @@ const GeneralSetting = () => {
                     className="col-sm-4 col-form-label
                     form-label"
                   >
-                    Full name
+                    Nombre Completo
                   </label>
                   <div className="col-sm-4 mb-3 mb-lg-0">
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="First name"
+                      placeholder={usuario ? usuario.nombre : "Nombre"}
                       id="fullName"
                       required
                     />
@@ -106,7 +103,7 @@ const GeneralSetting = () => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Last name"
+                      placeholder={usuario ? usuario.apellido : "Apellido"}
                       id="lastName"
                       required
                     />
@@ -119,13 +116,13 @@ const GeneralSetting = () => {
                     className="col-sm-4 col-form-label
                     form-label"
                   >
-                    Email
+                    Correo Electrónico
                   </label>
                   <div className="col-md-8 col-12">
                     <input
                       type="email"
                       className="form-control"
-                      placeholder="Email"
+                      placeholder={usuario ? usuario.correoElectronico : "Correo Electrónico"}
                       id="email"
                       required
                     />
@@ -134,28 +131,13 @@ const GeneralSetting = () => {
                 {/* row */}
                 <Row className="mb-3">
                   <Form.Label className="col-sm-4" htmlFor="phone">
-                    Phone <span className="text-muted">(Optional)</span>
+                    Teléfono <span className="text-muted">(Opcional)</span>
                   </Form.Label>
                   <Col md={8} xs={12}>
                     <Form.Control
                       type="text"
-                      placeholder="Enter Phone"
+                      placeholder={usuario ? usuario.telefono : "Teléfono"}
                       id="phone"
-                    />
-                  </Col>
-                </Row>
-
-                {/* Location */}
-                <Row className="mb-3">
-                  <Form.Label className="col-sm-4" htmlFor="country">
-                    Location
-                  </Form.Label>
-                  <Col md={8} xs={12}>
-                    <Form.Control
-                      as={FormSelect}
-                      placeholder="Select Country"
-                      id="country"
-                      options={countryOptions}
                     />
                   </Col>
                 </Row>
@@ -163,55 +145,18 @@ const GeneralSetting = () => {
                 {/* Address Line One */}
                 <Row className="mb-3">
                   <Form.Label className="col-sm-4" htmlFor="addressLine">
-                    Address line 1
+                    Dirección
                   </Form.Label>
                   <Col md={8} xs={12}>
                     <Form.Control
                       type="text"
-                      placeholder="Enter Address line 1"
+                      placeholder={usuario ? usuario.direccion : "Dirección"}
                       id="addressLine"
                       required
                     />
                   </Col>
                 </Row>
 
-                {/* Address Line Two */}
-                <Row className="mb-3">
-                  <Form.Label className="col-sm-4" htmlFor="addressLineTwo">
-                    Address line 2
-                  </Form.Label>
-                  <Col md={8} xs={12}>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter Address line 2"
-                      id="addressLineTwo"
-                      required
-                    />
-                  </Col>
-                </Row>
-
-                {/* Zip code */}
-                <Row className="align-items-center">
-                  <Form.Label className="col-sm-4" htmlFor="zipcode">
-                    Zip code
-                    <i className="fe fe-info fs-4 me-2 text-muted icon-xs"></i>
-                  </Form.Label>
-
-                  <Col md={8} xs={12}>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter Zip code"
-                      id="zipcode"
-                      required
-                    />
-                  </Col>
-
-                  <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-4">
-                    <Button variant="primary" type="submit">
-                      Save Changes
-                    </Button>
-                  </Col>
-                </Row>
               </Form>
             </div>
           </Card.Body>
