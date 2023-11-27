@@ -33,6 +33,7 @@ const createPrestamoHandler = async (req, res) => {
         estado,
         idEquipo,
         idUsuario,
+        comentarios,
     } = req.body;
 
     try {
@@ -42,6 +43,7 @@ const createPrestamoHandler = async (req, res) => {
             idEquipo: idEquipo,
             idUsuario: idUsuario,
             estado: estado,
+            comentarios: comentarios
         };
         const ref = await db.collection("prestamos").add(newPrestamo);
 

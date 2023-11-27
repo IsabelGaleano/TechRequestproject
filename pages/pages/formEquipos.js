@@ -10,11 +10,13 @@ import DefaultDashboardLayout from "../../layouts/DefaultDashboardLayout";
 
 // import sub components
 import { Notifications, DeleteAccount, GeneralSetting, EmailSetting, Preferences } from 'sub-components'
+import RegistrarEquipos from 'sub-components/prestamos/registrarPrestamos';
+import RegistrarPrestamos from 'sub-components/prestamos/registrarPrestamos';
 
 const FormEquipos = () => {
     const { user } = useAuthContext();
     const router = useRouter();
-    
+
     useEffect(() => {
         if (user == null) router.push("/");
     }, [user]);
@@ -34,8 +36,7 @@ const FormEquipos = () => {
         <Layout>
             <Container fluid className="p-6">
 
-                {/* Settings for Preferences */}
-                <Preferences />
+                <RegistrarPrestamos />
 
             </Container>
         </Layout>
