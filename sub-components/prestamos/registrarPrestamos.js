@@ -48,8 +48,24 @@ const RegistrarPrestamos = () => {
         try {
             setIsLoading(true);
             console.log(data);
+            data.idUsuario = user.email
 
-
+            const response = await fetch('/api/prestamos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+            
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }else{
+                //router.push("/pages/ciudades");
+                
+                setIsLoading(false);
+            }
+            
         } catch (error) {
             setError(error.message)
         }
