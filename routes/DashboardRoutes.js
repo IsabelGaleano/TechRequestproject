@@ -41,7 +41,7 @@ export const DashboardMenu = [
 		icon: 'layers',
 		children: [
 			{ id: uuid(), link: '/pages/formEquipos', name: 'Registrar Solicitud' },
-			{ id: uuid(), link: '/pages/settings', name: 'Settings'},
+			{ id: uuid(), link: '/pages/solicitudes', name: 'Solicitudes'},
 		]
 	},
 	{
