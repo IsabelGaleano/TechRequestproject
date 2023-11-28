@@ -18,6 +18,9 @@ const RegistrarPrestamos = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [equipos, setEquipos] = useState([])
     const [seleccioneEquiposDisabled, setSeleccioneEquiposDisabled] = useState(false)
+    const [cantidadDisponible, setCantidadDisponible] = useState(0);
+    const [selectedEquipoId, setSelectedEquipoId] = useState("");
+    const isSubmitDisabled = isLoading || cantidadDisponible <= 0 || selectedEquipoId === "";
 
 
     useEffect(() => {
@@ -44,6 +47,27 @@ const RegistrarPrestamos = () => {
         }
     };
 
+
+    const onEquipoSelect = (event) => {
+        const selectedId = event.target.value;
+
+        if (selectedId !== "") {
+            const selectedEquipo = equipos.find((equipo) => equipo.reference === selectedId);
+
+            if (selectedEquipo) {
+                setCantidadDisponible(selectedEquipo.cantidad);
+                setSeleccioneEquiposDisabled(true);
+            }
+        } else {
+
+            setCantidadDisponible(0);
+            setSeleccioneEquiposDisabled(false);
+        }
+
+
+        setSelectedEquipoId(selectedId);
+    };
+
     const onSubmit = async (data) => {
         try {
             setIsLoading(true);
@@ -57,15 +81,15 @@ const RegistrarPrestamos = () => {
                 },
                 body: JSON.stringify(data)
             });
-            
+
             if (!response.ok) {
                 throw new Error('Network response was not ok');
-            }else{
+            } else {
                 //router.push("/pages/ciudades");
-                
+
                 setIsLoading(false);
             }
-            
+
         } catch (error) {
             setError(error.message)
         }
@@ -75,37 +99,43 @@ const RegistrarPrestamos = () => {
         <Row className="mb-8">
             <Col xl={3} lg={4} md={12} xs={12}>
                 <div className="mb-4 mb-lg-0">
-                    <h4 className="mb-1">Preferences</h4>
-                    <p className="mb-0 fs-5 text-muted">Configure your preferences </p>
+                    <h4 className="mb-1">Solicitud de Equipo</h4>
+                    <p className="mb-0 fs-5 text-muted">La duración máxima permitida para adquirir un equipo es de 5 días.
+                        Por favor, asegúrese de devolver el equipo solicitado dentro de este período especificado.</p>
                 </div>
             </Col>
             <Col xl={9} lg={8} md={12} xs={12}>
                 <Card id="preferences">
                     <Card.Body>
                         <div className="mb-6">
-                            <h4 className="mb-1">Preferences</h4>
+                            <h4 className="mb-1">Solicitud</h4>
                         </div>
                         <Form onSubmit={handleSubmit(onSubmit)}>
 
                             <Form.Group className="mb-3 row" controlId="idEquipo">
                                 <Form.Label className="col-sm-4 col-form-label">Equipo</Form.Label>
-
                                 <Col md={8} xs={12}>
-                                    <Form.Select aria-label="Equipo" name='idEquipo'
+                                    <Form.Select
+                                        aria-label="Equipo"
+                                        name="idEquipo"
                                         {...register("idEquipo", { required: true })}
-                                        onClick={(e) => setSeleccioneEquiposDisabled(true)}
-                                        className={errors.idEquipo ? "form-control is-invalid" : "form-control"}>
-                                        <option value="" disabled={seleccioneEquiposDisabled}>Seleccione un equipo</option>
-                                        {
-                                            equipos.map(equipo => <option key={equipo.reference} value={equipo.reference}>{equipo.nombre} ({equipo.cantidad})</option>)
-
-                                        }
+                                        onClick={onEquipoSelect}
+                                        className={errors.idEquipo ? "form-control is-invalid" : "form-control"}
+                                    >
+                                        <option value="" disabled={seleccioneEquiposDisabled}>
+                                            Seleccione un equipo
+                                        </option>
+                                        {equipos.map((equipo) => (
+                                            <option key={equipo.reference} value={equipo.reference}>
+                                                {equipo.nombre} ({equipo.cantidad})
+                                            </option>
+                                        ))}
                                     </Form.Select>
-                                    {errors.idEquipo && (
-                                        <div className="invalid-feedback">Este campo es requerido.</div>
+                                    {errors.idEquipo && <div className="invalid-feedback">Este campo es requerido.</div>}
+                                    {cantidadDisponible <= 0 && selectedEquipoId !== "" && (
+                                        <p style={{ color: "red", marginTop: "5px" }}>No hay cantidad suficiente de equipo.</p>
                                     )}
                                 </Col>
-
                             </Form.Group>
 
                             <Form.Group className="mb-3 row" controlId="fechaInicio">
@@ -160,17 +190,15 @@ const RegistrarPrestamos = () => {
                             <div>
                                 {/* Button */}
                                 <div className="d-grid">
-                                    <Button variant="primary" type="submit" disabled={isLoading}>
-
+                                    <Button variant="primary" type="submit" disabled={isSubmitDisabled}>
                                         {isLoading ? (
                                             <div className="d-flex align-items-center">
                                                 <Spinner animation="border" size="sm" role="status" className="me-2" />
                                                 <span>Enviando...</span>
                                             </div>
                                         ) : (
-                                            'Crear país'
+                                            'Enviar'
                                         )}
-
                                     </Button>
                                 </div>
 
