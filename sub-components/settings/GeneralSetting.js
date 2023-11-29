@@ -1,92 +1,78 @@
-// import node module libraries
-import { Col, Row, Form, Card, Button, Image } from "react-bootstrap";
+import { Col, Row, Form, Card, Button, Image, Spinner } from "react-bootstrap";
+import { set, useForm } from "react-hook-form";
+import { Component, useEffect, useState } from "react";
 
-// import widget as custom components
-import { FormSelect, DropFiles } from "widgets";
+const GeneralSetting = (props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
 
-const GeneralSetting = props => {
   const usuario = props.usuario;
 
-  console.log(props);
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`/api/usuarios?reference=${usuario.reference}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+        setShowErrorAlert(true);
+        setTimeout(() => {
+          setShowErrorAlert(false);
+        }, 5000);
+      } else {
+        setShowSuccessAlert(true);
+        setTimeout(() => {
+          setShowSuccessAlert(false);
+        }, 5000);
+      }
+
+      setIsLoading(false);
+
+      // Additional logic after successful form submission
+
+      // router.push("/dashboard");
+    } catch (error) {
+      setIsLoading(false);
+      // console.error("There was a problem fetching the data:", error.message);
+    }
+  };
 
   return (
     <Row className="mb-8">
       <Col xl={3} lg={4} md={12} xs={12}>
         <div className="mb-4 mb-lg-0">
           <h4 className="mb-1">Ajustes Generales</h4>
-          <p className="mb-0 fs-5 text-muted">
-            Ajustes del Perfil{" "}
-          </p>
+          <p className="mb-0 fs-5 text-muted">Ajustes del Perfil </p>
         </div>
       </Col>
       <Col xl={9} lg={8} md={12} xs={12}>
         <Card>
-          {/* card body */}
           <Card.Body>
-            <div className=" mb-6">
+            <div className="mb-6">
               <h4 className="mb-1">Ajustes Generales</h4>
             </div>
-            <Row className="align-items-center mb-8">
-              <Col md={3} className="mb-3 mb-md-0">
-                <h5 className="mb-0">Foto de Perfil</h5>
-              </Col>
-              <Col md={9}>
-                <div className="d-flex align-items-center">
-                  <div className="me-3">
-                    <Image
-                      src="/images/avatar/avatar-5.jpg"
-                      className="rounded-circle avatar avatar-lg"
-                      alt=""
-                    />
-                  </div>
-                  <div>
-                    <Button
-                      variant="outline-white"
-                      className="me-2"
-                      type="submit"
-                    >
-                      Cambiar{" "}
-                    </Button>
-                    <Button variant="outline-white" type="submit">
-                      Eliminar{" "}
-                    </Button>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-            {/* col */}
-            <Row className="mb-8">
-              <Col md={3} className="mb-3 mb-md-0">
-                {/* heading */}
-                <h5 className="mb-0">Foto de Portada</h5>
-              </Col>
-              <Col md={9}>
-                {/* dropzone input */}
-                <div>
-                  <Form
-                    action="#"
-                    className="dropzone mb-3 py-10 border-dashed"
-                  >
-                    <DropFiles />
-                  </Form>
-                  <Button variant="outline-white" type="submit">
-                    Change{" "}
-                  </Button>
-                </div>
-              </Col>
-            </Row>
             <div>
-              {/* border */}
               <div className="mb-6">
                 <h4 className="mb-1">Información Básica</h4>
               </div>
-              <Form>
-                {/* row */}
+              <Form onSubmit={handleSubmit(onSubmit)}>
                 <Row className="mb-3">
                   <label
-                    htmlFor="fullName"
-                    className="col-sm-4 col-form-label
-                    form-label"
+                    htmlFor="nombre"
+                    className="col-sm-4 col-form-label form-label"
                   >
                     Nombre Completo
                   </label>
@@ -95,8 +81,8 @@ const GeneralSetting = props => {
                       type="text"
                       className="form-control"
                       placeholder={usuario ? usuario.nombre : "Nombre"}
-                      id="fullName"
-                      required
+                      id="nombre"
+                      {...register("nombre", { required: true })}
                     />
                   </div>
                   <div className="col-sm-4">
@@ -104,59 +90,93 @@ const GeneralSetting = props => {
                       type="text"
                       className="form-control"
                       placeholder={usuario ? usuario.apellido : "Apellido"}
-                      id="lastName"
-                      required
+                      id="apellido"
+                      {...register("apellido", { required: true })}
                     />
                   </div>
                 </Row>
-                {/* row */}
                 <Row className="mb-3">
                   <label
-                    htmlFor="email"
-                    className="col-sm-4 col-form-label
-                    form-label"
+                    htmlFor="correoElectronico"
+                    className="col-sm-4 col-form-label form-label"
                   >
                     Correo Electrónico
                   </label>
                   <div className="col-md-8 col-12">
                     <input
-                      type="email"
+                      type="correoElectronico"
                       className="form-control"
-                      placeholder={usuario ? usuario.correoElectronico : "Correo Electrónico"}
-                      id="email"
-                      required
+                      placeholder={
+                        usuario ? usuario.correoElectronico : "Correo Electrónico"
+                      }
+                      id="correoElectronico"
+                      {...register("correoElectronico", { required: true })}
                     />
                   </div>
                 </Row>
-                {/* row */}
                 <Row className="mb-3">
-                  <Form.Label className="col-sm-4" htmlFor="phone">
+                  <Form.Label className="col-sm-4" htmlFor="telefono">
                     Teléfono <span className="text-muted">(Opcional)</span>
                   </Form.Label>
                   <Col md={8} xs={12}>
                     <Form.Control
                       type="text"
                       placeholder={usuario ? usuario.telefono : "Teléfono"}
-                      id="phone"
+                      id="telefono"
+                      {...register("telefono")}
                     />
                   </Col>
                 </Row>
-
-                {/* Address Line One */}
                 <Row className="mb-3">
-                  <Form.Label className="col-sm-4" htmlFor="addressLine">
+                  <Form.Label className="col-sm-4" htmlFor="direccion">
                     Dirección
                   </Form.Label>
                   <Col md={8} xs={12}>
                     <Form.Control
                       type="text"
                       placeholder={usuario ? usuario.direccion : "Dirección"}
-                      id="addressLine"
-                      required
+                      id="direccion"
+                      {...register("direccion", { required: true })}
                     />
                   </Col>
                 </Row>
-
+                <Row className="mb-3">
+                  {/* Add other input fields here */}
+                </Row>
+                <Row className="mb-3">
+                  <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-4">
+                    <Button variant="primary" type="submit" disabled={isLoading}>
+                      {isLoading ? (
+                        <div className="d-flex align-items-center">
+                          <Spinner
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            className="me-2"
+                          />
+                          <span>Salvando...</span>
+                        </div>
+                      ) : (
+                        "Salvar Cambios"
+                      )}
+                    </Button>
+                  </Col>
+                  <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-4">
+                    {showSuccessAlert && (
+                      <div className="alert alert-success" role="alert">
+                        Los cambios han sido salvados con éxito!
+                      </div>
+                    )}
+                  </Col>
+                  
+                  <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-4">
+                    {showErrorAlert && (
+                      <div className="alert alert-error" role="alert">
+                        Ocurrió un error al salvar los cambios, por favor intente de nuevo.
+                      </div>
+                    )}
+                  </Col>
+                </Row>
               </Form>
             </div>
           </Card.Body>
