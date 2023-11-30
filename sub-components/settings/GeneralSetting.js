@@ -1,6 +1,6 @@
-import { Col, Row, Form, Card, Button, Image, Spinner } from "react-bootstrap";
-import { set, useForm } from "react-hook-form";
-import { Component, useEffect, useState } from "react";
+import { Col, Row, Form, Card, Button, Spinner } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
 const GeneralSetting = (props) => {
   const {
@@ -12,7 +12,23 @@ const GeneralSetting = (props) => {
   const [showSuccessAlert, setShowSuccessAlert] = useState(false);
   const [showErrorAlert, setShowErrorAlert] = useState(false);
 
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [correoElectronico, setCorreoElectronico] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [direccion, setDireccion] = useState("");
+
   const usuario = props.usuario;
+
+  useEffect(() => {
+    if (props.usuario) {
+      setNombre(props.usuario.nombre || "");
+      setApellido(props.usuario.apellido || "");
+      setCorreoElectronico(props.usuario.correoElectronico || "");
+      setTelefono(props.usuario.telefono || "");
+      setDireccion(props.usuario.direccion || "");
+    }
+  }, [props.usuario]);
 
   const onSubmit = async (data) => {
     setIsLoading(true);
@@ -28,10 +44,6 @@ const GeneralSetting = (props) => {
 
       if (!response.ok) {
         throw new Error("Network response was not ok");
-        setShowErrorAlert(true);
-        setTimeout(() => {
-          setShowErrorAlert(false);
-        }, 5000);
       } else {
         setShowSuccessAlert(true);
         setTimeout(() => {
@@ -40,13 +52,12 @@ const GeneralSetting = (props) => {
       }
 
       setIsLoading(false);
-
-      // Additional logic after successful form submission
-
-      // router.push("/dashboard");
     } catch (error) {
       setIsLoading(false);
-      // console.error("There was a problem fetching the data:", error.message);
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 5000);
     }
   };
 
@@ -80,18 +91,18 @@ const GeneralSetting = (props) => {
                     <input
                       type="text"
                       className="form-control"
-                      placeholder={usuario ? usuario.nombre : "Nombre"}
                       id="nombre"
                       {...register("nombre", { required: true })}
+                      defaultValue={nombre}
                     />
                   </div>
                   <div className="col-sm-4">
                     <input
                       type="text"
                       className="form-control"
-                      placeholder={usuario ? usuario.apellido : "Apellido"}
                       id="apellido"
                       {...register("apellido", { required: true })}
+                      defaultValue={apellido}
                     />
                   </div>
                 </Row>
@@ -106,11 +117,9 @@ const GeneralSetting = (props) => {
                     <input
                       type="correoElectronico"
                       className="form-control"
-                      placeholder={
-                        usuario ? usuario.correoElectronico : "Correo Electrónico"
-                      }
                       id="correoElectronico"
                       {...register("correoElectronico", { required: true })}
+                      defaultValue={correoElectronico}
                     />
                   </div>
                 </Row>
@@ -121,9 +130,9 @@ const GeneralSetting = (props) => {
                   <Col md={8} xs={12}>
                     <Form.Control
                       type="text"
-                      placeholder={usuario ? usuario.telefono : "Teléfono"}
                       id="telefono"
                       {...register("telefono")}
+                      defaultValue={telefono}
                     />
                   </Col>
                 </Row>
@@ -134,9 +143,9 @@ const GeneralSetting = (props) => {
                   <Col md={8} xs={12}>
                     <Form.Control
                       type="text"
-                      placeholder={usuario ? usuario.direccion : "Dirección"}
                       id="direccion"
                       {...register("direccion", { required: true })}
+                      defaultValue={direccion}
                     />
                   </Col>
                 </Row>

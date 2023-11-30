@@ -20,7 +20,9 @@ const Settings = () => {
     try {
       // const prop = { email: user.email };
 
-      const response = await fetch(`/api/usuarios?email=${user.email}`, {
+      console.log("user", user);
+
+      const response = await fetch(`/api/usuarios?reference=${user.uid}`, {
         method: "GET",
       });
 
