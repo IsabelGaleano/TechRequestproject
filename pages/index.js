@@ -22,6 +22,7 @@ import { useAuthContext } from "../context/AuthContext";
 import DefaultDashboardLayout from "../layouts/DefaultDashboardLayout";
 import { useRouter } from "next/router";
 import SignIn from "./authentication/sign-in";
+import ListaSolicitudes from "sub-components/prestamos/listaSolicitudes";
 
 const Home = () => {
   const router = useRouter();
@@ -36,7 +37,7 @@ const Home = () => {
         : DefaultDashboardLayout
       : DefaultDashboardLayout);
 
-      console.log(user);
+  console.log(user);
   return user ? (
     <Layout>
       <div className="bg-primary pt-10 pb-21"></div>
@@ -48,41 +49,22 @@ const Home = () => {
             <div>
               <div className="d-flex justify-content-between align-items-center">
                 <div className="mb-2 mb-lg-0">
-                  <h3 className="mb-0  text-white">Projects</h3>
+                  <h3 className="mb-0  text-white">Solicitudes de Equipos</h3>
                 </div>
                 <div>
-                  <Link href="#" className="btn btn-white">Create New Project</Link>
+                  <Link href="/pages/formEquipos" className="btn btn-white">Crear Solicitud</Link>
                 </div>
               </div>
             </div>
           </Col>
-          {ProjectsStatsData.map((item, index) => {
-            return (
-              <Col xl={3} lg={6} md={12} xs={12} className="mt-6" key={index}>
-                <StatRightTopIcon info={item} />
-              </Col>
-            )
-          })}
-        </Row>
 
+        </Row>
         {/* Active Projects  */}
-        <ActiveProjects />
+        <div className="my-4"> 
+          <ListaSolicitudes />
+        </div>
 
-        <Row className="my-6">
-          <Col xl={4} lg={12} md={12} xs={12} className="mb-6 mb-xl-0">
 
-            {/* Tasks Performance  */}
-            <TasksPerformance />
-
-          </Col>
-          {/* card  */}
-          <Col xl={8} lg={12} md={12} xs={12}>
-
-            {/* Teams  */}
-            <Teams />
-
-          </Col>
-        </Row>
       </Container>
     </Layout>
   ) : (

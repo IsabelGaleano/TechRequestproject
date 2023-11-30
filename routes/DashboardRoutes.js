@@ -9,8 +9,17 @@ export const DashboardMenu = [
 	},
 	{
 		id: uuid(),
-		title: 'LAYOUTS & PAGES',
+		title: 'Administración',
 		grouptitle: true
+	},
+	{
+		id: uuid(),
+		title: 'Solicitudes',
+		icon: 'layers',
+		children: [
+			{ id: uuid(), link: '/pages/formEquipos', name: 'Registrar Solicitud' },
+			{ id: uuid(), link: '/pages/solicitudes', name: 'Solicitudes'},
+		]
 	},
 	{
 		id: uuid(),
