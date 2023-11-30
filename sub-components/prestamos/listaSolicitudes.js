@@ -20,12 +20,23 @@ const ListaSolicitudes = () => {
     const router = useRouter()
     const [equipos, setEquipos] = useState([])
     const [solicitudes, setSolicitudes] = useState([])
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        getEquipos();
-        getSolicitudes();
-        if (user == null) router.push("/")
-    }, [user])
+        const fetchData = async () => {
+            try {
+                await getEquipos();
+                await getSolicitudes();
+                setLoading(false);
+            } catch (error) {
+                console.error("Error fetching data:", error.message);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+        if (user == null) router.push("/");
+    }, [user]);
 
 
     const getEquipos = async () => {
@@ -101,46 +112,55 @@ const ListaSolicitudes = () => {
     };
 
     return (
+
         <Card className="h-100">
             <Card.Header className="bg-white py-4">
                 <h4 className="mb-0">Información </h4>
             </Card.Header>
-            <Table responsive className="text-nowrap">
-                <thead className="table-light">
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Fecha Inicial</th>
-                        <th>Fecha Devolución</th>
-                        <th>Estado</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {solicitudes.map((solicitud, index) => {
-                        const equipo = equipos.find(e => e.reference === solicitud.idEquipo);
-                        return (
-                            <tr key={index}>
-                                <td className="align-middle">
-                                    <div className="d-flex align-items-center">
-                                        
-                                        <div className="ms-3 lh-1">
-                                            <h5 className=" mb-1">{equipo.nombre}</h5>
-                                            <p className="mb-0">{equipo.modelo}</p>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td className="align-middle">{solicitud.fechaInicio}</td>
-                                <td className="align-middle">{solicitud.fechaFin}</td>
-                                <td className="align-middle">{solicitud.estado}</td>
-                                <td className="align-middle">
-                                  
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
+            {loading ? (
+                <p>Cargando...</p>
+            ) : (
+                <Table responsive className="text-nowrap">
+                    <thead className="table-light">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Fecha Inicial</th>
+                            <th>Fecha Devolución</th>
+                            <th>Estado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {solicitudes.map((solicitud, index) => {
+                            const equipo = equipos.find(e => e.reference === solicitud.idEquipo);
+                            if (!equipo) {
+                                // Manejar el caso donde no se encuentra un equipo correspondiente
+                                console.error(`No se encontró un equipo para la solicitud con idEquipo ${solicitud.idEquipo}`);
+                                return null;
+                            }
+                            return (
+                                <tr key={index}>
+                                    <td className="align-middle">
+                                        <div className="d-flex align-items-center">
 
-            </Table>
+                                            <div className="ms-3 lh-1">
+                                                <h5 className=" mb-1">{equipo.nombre}</h5>
+                                                <p className="mb-0">{equipo.modelo}</p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td className="align-middle">{solicitud.fechaInicio}</td>
+                                    <td className="align-middle">{solicitud.fechaFin}</td>
+                                    <td className="align-middle">{solicitud.estado}</td>
+                                    <td className="align-middle">
+
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+
+                </Table>)}
         </Card>
     )
 }
