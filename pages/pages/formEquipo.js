@@ -1,21 +1,17 @@
-// import node module libraries
 import { Container } from 'react-bootstrap';
 import { Component, useEffect, useState } from "react";
-// import widget as custom components
-import { PageHeading } from 'widgets'
+
 
 import { useAuthContext } from "../../context/AuthContext";
 import { useRouter } from "next/navigation";
 import DefaultDashboardLayout from "../../layouts/DefaultDashboardLayout";
 
-// import sub components
-import { Notifications, DeleteAccount, GeneralSetting, EmailSetting, Preferences } from 'sub-components'
-import RegistrarPrestamos from 'sub-components/prestamos/registrarPrestamos';
+import RegistrarEquipo from 'sub-components/equipos/registrarEquipo';
 
 const FormEquipos = () => {
     const { user } = useAuthContext();
     const router = useRouter();
-
+    
     useEffect(() => {
         if (user == null) router.push("/");
     }, [user]);
@@ -34,9 +30,7 @@ const FormEquipos = () => {
 
         <Layout>
             <Container fluid className="p-6">
-
-                <RegistrarPrestamos />
-
+                <RegistrarEquipo />
             </Container>
         </Layout>
 
