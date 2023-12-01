@@ -176,10 +176,10 @@ const QuickMenu = () => {
                         </Dropdown.Item>
                         <Dropdown.Item >
                             <i className="fe fe-settings me-2"></i> Account Settings
-                        </Dropdown.Item>
+                        </Dropdown.Item> */}
                         <Dropdown.Item onClick={handleLogout}>
                             <i className='fe fe-power me-2'></i>Cerrar sesión
-                        </Dropdown.Item> */}
+                        </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </ListGroup>
@@ -255,10 +255,10 @@ const QuickMenu = () => {
                         </Dropdown.Item>
                         <Dropdown.Item >
                             <i className="fe fe-settings me-2"></i> Account Settings
-                        </Dropdown.Item>
+                        </Dropdown.Item> */}
                         <Dropdown.Item onClick={handleLogout}>
                             <i className='fe fe-power me-2'></i>Cerrar sesión
-                        </Dropdown.Item> */}
+                        </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>
             </ListGroup>
