@@ -85,9 +85,9 @@ const RegistrarPrestamos = () => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             } else {
-                //router.push("/pages/ciudades");
 
                 setIsLoading(false);
+                router.push("/pages/solicitudes");
             }
 
         } catch (error) {
