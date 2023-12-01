@@ -15,7 +15,7 @@ import DefaultDashboardLayout from 'layouts/DefaultDashboardLayout';
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const pageURL = process.env.baseURL + router.pathname;
-  const title = 'Tripnary';
+  const title = 'TechRequest';
   const description =
     'Tripnary es una aplicación que te ayuda a planificar tus viajes de manera fácil y rápida.';
   const keywords =

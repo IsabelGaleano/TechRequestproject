@@ -71,9 +71,8 @@ const NavbarVertical = (props) => {
     return (
       <Link
         href={item.link}
-        className={`nav-link ${
-          location.pathname === item.link ? "active" : ""
-        }`}
+        className={`nav-link ${location.pathname === item.link ? "active" : ""
+          }`}
         onClick={(e) =>
           isMobile ? props.onClick(!props.showMenu) : props.showMenu
         }
@@ -101,7 +100,7 @@ const NavbarVertical = (props) => {
       <SimpleBar style={{ maxHeight: "100vh" }}>
         <div className="nav-scroller">
           <Link href="/" className="navbar-brand">
-            <Image src="/images/brand/logo/logo.svg" alt="" />
+            <span style={{ fontSize: '24px', color: 'white' }}>TechRequest</span>
           </Link>
         </div>
         {/* Dashboard Menu */}
@@ -306,9 +305,8 @@ const NavbarVertical = (props) => {
                     {/* menu item without any childern items like Documentation and Changelog items*/}
                     <Link
                       href={menu.link}
-                      className={`nav-link ${
-                        location.pathname === menu.link ? "active" : ""
-                      }`}
+                      className={`nav-link ${location.pathname === menu.link ? "active" : ""
+                        }`}
                     >
                       {typeof menu.icon === "string" ? (
                         <i className={`nav-icon fe fe-${menu.icon} me-2`}></i>
