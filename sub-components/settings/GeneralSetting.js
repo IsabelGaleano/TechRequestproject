@@ -1,215 +1,189 @@
-// import node module libraries
-import { Col, Row, Form, Card, Button, Image } from "react-bootstrap";
+import { Col, Row, Form, Card, Button, Spinner } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
 
-// import widget as custom components
-import { FormSelect, DropFiles } from "widgets";
+const GeneralSetting = (props) => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+  const [showErrorAlert, setShowErrorAlert] = useState(false);
 
-const GeneralSetting = () => {
-  const countryOptions = [
-    { value: "India", label: "India" },
-    { value: "US", label: "US" },
-    { value: "UK", label: "UK" },
-    { value: "UAE", label: "UAE" },
-  ];
+  const [nombre, setNombre] = useState("");
+  const [apellido, setApellido] = useState("");
+  const [correoElectronico, setCorreoElectronico] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [direccion, setDireccion] = useState("");
+
+  const usuario = props.usuario;
+
+  useEffect(() => {
+    if (props.usuario) {
+      setNombre(props.usuario.nombre || "");
+      setApellido(props.usuario.apellido || "");
+      setCorreoElectronico(props.usuario.correoElectronico || "");
+      setTelefono(props.usuario.telefono || "");
+      setDireccion(props.usuario.direccion || "");
+    }
+  }, [props.usuario]);
+
+  const onSubmit = async (data) => {
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(`/api/usuarios?reference=${usuario.reference}`, {
+        method: "PUT",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        setShowSuccessAlert(true);
+        setTimeout(() => {
+          setShowSuccessAlert(false);
+        }, 5000);
+      }
+
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      setShowErrorAlert(true);
+      setTimeout(() => {
+        setShowErrorAlert(false);
+      }, 5000);
+    }
+  };
 
   return (
     <Row className="mb-8">
       <Col xl={3} lg={4} md={12} xs={12}>
         <div className="mb-4 mb-lg-0">
-          <h4 className="mb-1">General Setting</h4>
-          <p className="mb-0 fs-5 text-muted">
-            Profile configuration settings{" "}
-          </p>
+          <h4 className="mb-1">Ajustes Generales</h4>
+          <p className="mb-0 fs-5 text-muted">Ajustes del Perfil </p>
         </div>
       </Col>
       <Col xl={9} lg={8} md={12} xs={12}>
         <Card>
-          {/* card body */}
           <Card.Body>
-            <div className=" mb-6">
-              <h4 className="mb-1">General Settings</h4>
+            <div className="mb-6">
+              <h4 className="mb-1">Ajustes Generales</h4>
             </div>
-            <Row className="align-items-center mb-8">
-              <Col md={3} className="mb-3 mb-md-0">
-                <h5 className="mb-0">Avatar</h5>
-              </Col>
-              <Col md={9}>
-                <div className="d-flex align-items-center">
-                  <div className="me-3">
-                    <Image
-                      src="/images/avatar/avatar-5.jpg"
-                      className="rounded-circle avatar avatar-lg"
-                      alt=""
-                    />
-                  </div>
-                  <div>
-                    <Button
-                      variant="outline-white"
-                      className="me-2"
-                      type="submit"
-                    >
-                      Change{" "}
-                    </Button>
-                    <Button variant="outline-white" type="submit">
-                      Remove{" "}
-                    </Button>
-                  </div>
-                </div>
-              </Col>
-            </Row>
-            {/* col */}
-            <Row className="mb-8">
-              <Col md={3} className="mb-3 mb-md-0">
-                {/* heading */}
-                <h5 className="mb-0">Cover photo</h5>
-              </Col>
-              <Col md={9}>
-                {/* dropzone input */}
-                <div>
-                  <Form
-                    action="#"
-                    className="dropzone mb-3 py-10 border-dashed"
-                  >
-                    <DropFiles />
-                  </Form>
-                  <Button variant="outline-white" type="submit">
-                    Change{" "}
-                  </Button>
-                </div>
-              </Col>
-            </Row>
             <div>
-              {/* border */}
               <div className="mb-6">
-                <h4 className="mb-1">Basic information</h4>
+                <h4 className="mb-1">Información Básica</h4>
               </div>
-              <Form>
-                {/* row */}
+              <Form onSubmit={handleSubmit(onSubmit)}>
                 <Row className="mb-3">
                   <label
-                    htmlFor="fullName"
-                    className="col-sm-4 col-form-label
-                    form-label"
+                    htmlFor="nombre"
+                    className="col-sm-4 col-form-label form-label"
                   >
-                    Full name
+                    Nombre Completo
                   </label>
                   <div className="col-sm-4 mb-3 mb-lg-0">
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="First name"
-                      id="fullName"
-                      required
+                      id="nombre"
+                      {...register("nombre", { required: true })}
+                      defaultValue={nombre}
                     />
                   </div>
                   <div className="col-sm-4">
                     <input
                       type="text"
                       className="form-control"
-                      placeholder="Last name"
-                      id="lastName"
-                      required
+                      id="apellido"
+                      {...register("apellido", { required: true })}
+                      defaultValue={apellido}
                     />
                   </div>
                 </Row>
-                {/* row */}
                 <Row className="mb-3">
                   <label
-                    htmlFor="email"
-                    className="col-sm-4 col-form-label
-                    form-label"
+                    htmlFor="correoElectronico"
+                    className="col-sm-4 col-form-label form-label"
                   >
-                    Email
+                    Correo Electrónico
                   </label>
                   <div className="col-md-8 col-12">
                     <input
-                      type="email"
+                      type="correoElectronico"
                       className="form-control"
-                      placeholder="Email"
-                      id="email"
-                      required
+                      id="correoElectronico"
+                      {...register("correoElectronico", { required: true })}
+                      defaultValue={correoElectronico}
                     />
                   </div>
                 </Row>
-                {/* row */}
                 <Row className="mb-3">
-                  <Form.Label className="col-sm-4" htmlFor="phone">
-                    Phone <span className="text-muted">(Optional)</span>
+                  <Form.Label className="col-sm-4" htmlFor="telefono">
+                    Teléfono <span className="text-muted">(Opcional)</span>
                   </Form.Label>
                   <Col md={8} xs={12}>
                     <Form.Control
                       type="text"
-                      placeholder="Enter Phone"
-                      id="phone"
+                      id="telefono"
+                      {...register("telefono")}
+                      defaultValue={telefono}
                     />
                   </Col>
                 </Row>
-
-                {/* Location */}
                 <Row className="mb-3">
-                  <Form.Label className="col-sm-4" htmlFor="country">
-                    Location
-                  </Form.Label>
-                  <Col md={8} xs={12}>
-                    <Form.Control
-                      as={FormSelect}
-                      placeholder="Select Country"
-                      id="country"
-                      options={countryOptions}
-                    />
-                  </Col>
-                </Row>
-
-                {/* Address Line One */}
-                <Row className="mb-3">
-                  <Form.Label className="col-sm-4" htmlFor="addressLine">
-                    Address line 1
+                  <Form.Label className="col-sm-4" htmlFor="direccion">
+                    Dirección
                   </Form.Label>
                   <Col md={8} xs={12}>
                     <Form.Control
                       type="text"
-                      placeholder="Enter Address line 1"
-                      id="addressLine"
-                      required
+                      id="direccion"
+                      {...register("direccion", { required: true })}
+                      defaultValue={direccion}
                     />
                   </Col>
                 </Row>
-
-                {/* Address Line Two */}
                 <Row className="mb-3">
-                  <Form.Label className="col-sm-4" htmlFor="addressLineTwo">
-                    Address line 2
-                  </Form.Label>
-                  <Col md={8} xs={12}>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter Address line 2"
-                      id="addressLineTwo"
-                      required
-                    />
-                  </Col>
+                  {/* Add other input fields here */}
                 </Row>
-
-                {/* Zip code */}
-                <Row className="align-items-center">
-                  <Form.Label className="col-sm-4" htmlFor="zipcode">
-                    Zip code
-                    <i className="fe fe-info fs-4 me-2 text-muted icon-xs"></i>
-                  </Form.Label>
-
-                  <Col md={8} xs={12}>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter Zip code"
-                      id="zipcode"
-                      required
-                    />
-                  </Col>
-
+                <Row className="mb-3">
                   <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-4">
-                    <Button variant="primary" type="submit">
-                      Save Changes
+                    <Button variant="primary" type="submit" disabled={isLoading}>
+                      {isLoading ? (
+                        <div className="d-flex align-items-center">
+                          <Spinner
+                            animation="border"
+                            size="sm"
+                            role="status"
+                            className="me-2"
+                          />
+                          <span>Salvando...</span>
+                        </div>
+                      ) : (
+                        "Salvar Cambios"
+                      )}
                     </Button>
+                  </Col>
+                  <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-4">
+                    {showSuccessAlert && (
+                      <div className="alert alert-success" role="alert">
+                        Los cambios han sido salvados con éxito!
+                      </div>
+                    )}
+                  </Col>
+                  
+                  <Col md={{ offset: 4, span: 8 }} xs={12} className="mt-4">
+                    {showErrorAlert && (
+                      <div className="alert alert-error" role="alert">
+                        Ocurrió un error al salvar los cambios, por favor intente de nuevo.
+                      </div>
+                    )}
                   </Col>
                 </Row>
               </Form>
