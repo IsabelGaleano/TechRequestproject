@@ -1,6 +1,6 @@
 // import node module libraries
 import Link from 'next/link';
-import { Fragment, useEffect } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import {
     Row,
@@ -25,14 +25,42 @@ import { useRouter } from 'next/navigation';
 import { useAuthContext } from "../context/AuthContext";
 
 const QuickMenu = () => {
-
     const { user } = useAuthContext()
     const { userInfo } = useAuthContext()
-
     const router = useRouter()
+    const [usuario, setUsuario] = useState(null);
+    const [nombre, setNombre] = useState("");
+    const [apellido, setApellido] = useState("");
+
+    const getUsuario = async () => {
+        try {
+            // const prop = { email: user.email };
+
+            console.log("user", user);
+
+            const response = await fetch(`/api/usuarios?reference=${user.uid}`, {
+                method: "GET",
+            });
+
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+
+            setUsuario(data);
+
+            setNombre(data.nombre);
+            setApellido(data.apellido);
+
+        } catch (error) {
+            console.error("There was a problem fetching the data:", error.message);
+        }
+    };
 
     useEffect(() => {
         if (user == null) router.push("/")
+
+        getUsuario();
     }, [user])
 
 
@@ -130,15 +158,17 @@ const QuickMenu = () => {
                     >
                         <Dropdown.Item as="div" className="px-4 pb-0 pt-2" bsPrefix=' '>
                             <div className="lh-1 ">
-                                <h5 className="mb-1"> John E. Grainger</h5>
-                                <Link href="#" className="text-inherit fs-6">View my profile</Link>
+                                <h5 className="mb-1">{nombre} {apellido}</h5>
+                                <Link href={'/pages/settings'} className="text-inherit fs-6">Ver mi Perfil</Link>
                             </div>
                             <div className=" dropdown-divider mt-3 mb-2"></div>
                         </Dropdown.Item>
                         <Dropdown.Item eventKey="2">
-                            <i className="fe fe-user me-2"></i> Edit Profile
+                            <div>
+                                <Link href={'/pages/settings'}><i className="fe fe-user me-2"></i> Editar Perfil</Link>
+                            </div>
                         </Dropdown.Item>
-                        <Dropdown.Item eventKey="3">
+                        {/* <Dropdown.Item eventKey="3">
                             <i className="fe fe-activity me-2"></i> Activity Log
                         </Dropdown.Item>
                         <Dropdown.Item className="text-primary">
@@ -146,7 +176,7 @@ const QuickMenu = () => {
                         </Dropdown.Item>
                         <Dropdown.Item >
                             <i className="fe fe-settings me-2"></i> Account Settings
-                        </Dropdown.Item>
+                        </Dropdown.Item> */}
                         <Dropdown.Item onClick={handleLogout}>
                             <i className='fe fe-power me-2'></i>Cerrar sesión
                         </Dropdown.Item>
@@ -206,15 +236,18 @@ const QuickMenu = () => {
                     >
                         <Dropdown.Item as="div" className="px-4 pb-0 pt-2" bsPrefix=' '>
                             <div className="lh-1 ">
-                                <h5 className="mb-1"> John E. Grainger</h5>
-                                <Link href="#" className="text-inherit fs-6">View my profile</Link>
+                                <h5 className="mb-1">{nombre} {apellido}</h5>
+
+                                <Link href={'/pages/settings'} className="text-inherit fs-6">Ver mi Perfil</Link>
                             </div>
                             <div className=" dropdown-divider mt-3 mb-2"></div>
                         </Dropdown.Item>
                         <Dropdown.Item eventKey="2">
-                            <i className="fe fe-user me-2"></i> Edit Profile
+                            <div>
+                                <Link href={'/pages/settings'}><i className="fe fe-user me-2"></i> Editar Perfil</Link>
+                            </div>
                         </Dropdown.Item>
-                        <Dropdown.Item eventKey="3">
+                        {/* <Dropdown.Item eventKey="3">
                             <i className="fe fe-activity me-2"></i> Activity Log
                         </Dropdown.Item>
                         <Dropdown.Item className="text-primary">
@@ -222,7 +255,7 @@ const QuickMenu = () => {
                         </Dropdown.Item>
                         <Dropdown.Item >
                             <i className="fe fe-settings me-2"></i> Account Settings
-                        </Dropdown.Item>
+                        </Dropdown.Item> */}
                         <Dropdown.Item onClick={handleLogout}>
                             <i className='fe fe-power me-2'></i>Cerrar sesión
                         </Dropdown.Item>
